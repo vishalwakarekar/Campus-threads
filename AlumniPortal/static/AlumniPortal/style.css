@@ -1,0 +1,362 @@
+/* D:/minip/AlumniTKIET/AlumniPortal/static/AlumniPortal/style.css */
+
+/* Global Resets and Box Sizing */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit; /* Inherit box-sizing for easier layout */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    /* Use a standard sans-serif font stack */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; /* THIS is the main page background */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* REMOVED any conflicting background-image rules */
+}
+
+/* --- Header Styling --- */
+header {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 0.8rem 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky; /* Keep header at the top */
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+.college-logo {
+    height: 50px; /* Adjusted size */
+    margin-right: 15px;
+}
+.college-name h2,
+.college-name h3,
+.college-name p {
+    margin: 0;
+    line-height: 1.2;
+}
+.college-name h2 {
+    font-size: 1.3em;
+    color: #003366;
+    font-weight: bold; /* Added for consistency */
+}
+.college-name h3 {
+    font-size: 1.0em;
+    color: #0056b3;
+}
+.college-name p {
+    font-size: 0.85em;
+    color: #555; /* Adjusted color */
+}
+
+/* --- Navigation Styling --- */
+.navigation {
+    display: flex;
+    align-items: center;
+}
+.navigation a {
+    color: #333;
+    text-decoration: none;
+    margin-left: 15px; /* Use margin-left for spacing */
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 1em; /* Adjusted from 1.1em for consistency */
+    font-weight: 500; /* Added for consistency */
+}
+.navigation a:hover {
+    background-color: #eee;
+    color: #007bff; /* Match hover color */
+}
+
+/* Navigation Buttons (Login/Register/Profile/Logout) */
+.navigation .nav-button {
+    background-color: #007bff;
+    color: white !important; /* Important to override default link color */
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Ensure proper alignment */
+    text-align: center;
+    margin-left: 15px; /* Consistent spacing */
+    font-size: 1em; /* Consistent font size */
+    font-weight: 500; /* Consistent font weight */
+}
+.navigation .nav-button:hover {
+    background-color: #0056b3;
+    color: white !important;
+}
+
+/* --- Hero Section Styling --- */
+.hero-section {
+    /* Make sure 'background.png' exists in static/AlumniPortal/images/ */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url("images/background.png"); /* Relative path */
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: #333; /* Fallback color if image fails */
+    color: white;
+    text-align: center;
+    padding: 80px 20px 70px 20px;
+    min-height: 55vh; /* Adjust height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+/* Styles for content inside the hero section */
+.hero-section h1 {
+    font-size: 2.8em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+.hero-section p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    max-width: 700px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+}
+/* Call to action buttons style (used in Hero and Sections) */
+.cta-button {
+    display: inline-block;
+    background-color: #007bff;
+    color: white !important;
+    padding: 14px 28px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 10px 5px;
+    border: none;
+    cursor: pointer; /* Ensure cursor changes */
+}
+.cta-button:hover {
+    background-color: #0056b3;
+    color: white !important;
+    transform: translateY(-2px);
+}
+.cta-button.secondary {
+    background-color: #6c757d;
+}
+.cta-button.secondary:hover {
+    background-color: #5a6268;
+}
+
+/* --- Content Sections Container --- */
+.content-container {
+    max-width: 1100px;
+    margin: 40px auto; /* Centers the container horizontally */
+    padding: 0 20px;
+    flex-grow: 1; /* Allows this container to grow and push footer down */
+    width: 100%;
+}
+
+/* Styling for sections within the content container */
+.home-section {
+    background-color: #fff; /* White background for content boxes */
+    padding: 35px;
+    margin-bottom: 35px;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+    text-align: center;
+}
+.home-section h2 {
+    color: #0056b3;
+    margin-top: 0;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+    display: inline-block; /* Keep border only under text */
+}
+
+/* About Us Section Specifics */
+.about-section p {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    max-width: 800px; /* Limit text width */
+    margin-left: auto;
+    margin-right: auto;
+}
+/* .about-section .cta-button is handled by .cta-button.secondary */
+
+/* Latest News Section Specifics */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 25px;
+    text-align: left; /* Align text left within news items */
+}
+.news-item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden; /* Keep image corners rounded */
+    background-color: #fdfdfd;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.news-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+.news-item img {
+    width: 100%;
+    height: 200px; /* Fixed height for landscape feel */
+    object-fit: cover; /* Crop image nicely */
+    display: block;
+    border-bottom: 1px solid #eee;
+}
+.news-content {
+    padding: 20px;
+}
+.news-content h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: #333;
+}
+.news-content p {
+    font-size: 0.95em;
+    margin-bottom: 15px;
+    color: #555;
+}
+.news-content a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+.news-content a:hover {
+    text-decoration: underline;
+}
+
+/* Upcoming Events Section Specifics */
+.events-list {
+    display: grid; /* Use grid for events too */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive columns */
+    gap: 25px;
+    text-align: left; /* Align text left within event items */
+}
+.event-item {
+    background-color: #f8f9fa; /* Light background */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+ .event-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+.event-item h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #17a2b8; /* Different color for events */
+    font-size: 1.2em;
+}
+.event-item p { /* For the date */
+    margin-bottom: 15px; /* Space before button */
+    font-size: 0.95em;
+    color: #555;
+}
+/* Use cta-button style for consistency, but make adjustments */
+.event-item .cta-button {
+    padding: 8px 18px;
+    font-size: 0.9em;
+    width: 100%; /* Make button full width */
+    text-align: center;
+    margin: 0; /* Remove default margin */
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    margin-top: auto; /* Pushes footer down if content is short */
+    padding: 30px 20px;
+    font-size: 0.95em;
+    color: #f8f9fa; /* Light text on dark background */
+    background-color: #343a40; /* Dark background */
+    width: 100%;
+    flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+     .hero-section h1 { font-size: 2.4em; }
+     .hero-section p { font-size: 1.1em; }
+     /* Add other adjustments if needed */
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center; /* Center items when stacked */
+        padding: 1rem;
+    }
+    .nav-left {
+        margin-bottom: 15px; /* Space below logo/name */
+        text-align: center; /* Center college name text */
+    }
+    .navigation {
+        width: 100%;
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Center nav links */
+    }
+    .navigation a {
+        margin: 5px 10px; /* Adjust spacing for wrapped links */
+    }
+    .navigation .nav-button {
+        margin: 5px 10px; /* Adjust spacing */
+    }
+
+    .hero-section {
+        padding: 60px 15px 50px 15px;
+        min-height: 45vh; /* Adjust hero height */
+    }
+    .hero-section h1 {
+        font-size: 2em;
+    }
+    .hero-section p {
+        font-size: 1em;
+    }
+
+    .content-container {
+        margin-top: 30px; /* Reduce top margin */
+        margin-bottom: 30px;
+    }
+    .home-section {
+        padding: 25px; /* Reduce padding */
+        margin-bottom: 25px;
+    }
+    .news-grid,
+    .events-list {
+        grid-template-columns: 1fr; /* Stack grid items */
+    }
+}
+
+/* Remove styles related to the old popup login/register */
+/* .wrapper, .form-box, .icon-close, .input-box, .remember-forgot, .btn, .login-register etc. are removed */
+/* Also removed the second set of header/navigation styles and the body::before overlay */
+/* Also removed styles for .menu-icon and .dropdown-menu as they weren't in the final home.html */
+
+

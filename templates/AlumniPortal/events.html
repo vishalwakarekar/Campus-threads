@@ -1,0 +1,360 @@
+{% extends "AlumniPortal/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title|default:"Events - Alumni Portal" }}{% endblock title %}
+
+{% block extra_head %}
+    <!-- Bootstrap CSS (Required for cards, pagination, toast, etc.) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    {# Font Awesome & main_styles.css are already in base.html #}
+
+    <style>
+        /* Styles specific to the events page content */
+        /* CSS Variables, body styles, and header styles are inherited from main_styles.css via base.html */
+
+        main { /* This main tag is from base.html, specific padding for events page content */
+            padding-top: 1rem; /* Bootstrap's mt-4 equivalent */
+            padding-bottom: 3rem; /* Bootstrap's mb-5 equivalent */
+            flex-grow: 1;
+        }
+
+        /* For the lead paragraph under the main page title */
+        .text-center > .lead {
+            color: var(--muted-text-color);
+            transition: color var(--theme-transition-duration) ease;
+        }
+
+        .search-form-event .form-control {
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            padding-left: 20px;
+            height: calc(1.5em + .75rem + 2px);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            transition: background-color var(--theme-transition-duration) ease,
+                        color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease;
+        }
+        .search-form-event .form-control::placeholder {
+            color: var(--muted-text-color);
+        }
+
+        .search-form-event .btn {
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+            font-size: 0.9rem;
+            height: calc(1.5em + .75rem + 2px);
+            display: flex;
+            align-items: center;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--header-button-text);
+            transition: background-color var(--theme-transition-duration) ease,
+                        border-color var(--theme-transition-duration) ease;
+        }
+        .search-form-event .btn:hover {
+            background-color: var(--header-button-hover-bg);
+            border-color: var(--header-button-hover-bg);
+        }
+
+        .event-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color var(--theme-transition-duration) ease;
+            overflow: hidden;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0.25rem 0.5rem var(--shadow-color);
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.75rem 1.5rem var(--card-hover-shadow-color) !important;
+        }
+
+        .event-card-img-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-color);
+            padding: 0.75rem;
+            transition: background-color var(--theme-transition-duration) ease;
+        }
+
+        .event-card-img {
+            max-height: 180px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 0.25rem;
+        }
+
+        .event-card .card-body {
+            padding: 1rem 1.25rem;
+        }
+
+        .event-card .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            transition: color var(--theme-transition-duration) ease;
+        }
+
+        .event-card .event-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--muted-text-color);
+            margin-bottom: 1rem;
+            transition: color var(--theme-transition-duration) ease;
+        }
+
+        .event-details-column {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--muted-text-color);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        .event-details-column strong {
+            color: var(--text-color);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        .event-details-column .fas,
+        .event-details-column .far,
+        .event-details-column .fab {
+            color: var(--muted-text-color);
+            transition: color var(--theme-transition-duration) ease;
+            margin-right: 0.25em;
+        }
+        .event-details-column .badge {
+            font-size: 0.8rem;
+            background-color: var(--primary-subtle-bg) !important; /* Assuming Bootstrap 5.3+ variables */
+            color: var(--primary-emphasis-text) !important; /* Assuming Bootstrap 5.3+ variables */
+            border: 1px solid var(--primary-subtle-bg) !important; /* Assuming Bootstrap 5.3+ variables */
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
+        }
+        .event-details-column p {
+            margin-bottom: 0.35rem;
+        }
+
+        .btn-attend-event {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+        body.dark-theme .btn-success { /* Ensure Bootstrap buttons adapt if not using BS theme variables */
+            background-color: #198754; /* Example dark theme success */
+            border-color: #198754;
+        }
+        body.dark-theme .btn-success:hover {
+            background-color: #157347;
+            border-color: #146c43;
+        }
+
+        .toast-container {
+            z-index: 1090; /* Ensure toast is above other elements */
+        }
+        body.dark-theme .toast.text-bg-success { /* Ensure Bootstrap toast adapts */
+            background-color: var(--bs-success-bg-subtle, #0a3622) !important; /* Example dark theme success toast */
+            color: var(--bs-success-text-emphasis, #a3cfbb) !important;
+        }
+        body.dark-theme .toast .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        .alert {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--border-color);
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
+        }
+        .alert .alert-heading {
+            color: var(--primary-color);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        .alert .text-primary { /* Ensure Bootstrap text utilities adapt */
+            color: var(--primary-color) !important;
+            transition: color var(--theme-transition-duration) ease;
+        }
+
+        .pagination .page-link {
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            border-color: var(--border-color);
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
+        }
+        .pagination .page-link:hover {
+            background-color: var(--header-link-active-bg);
+            color: var(--header-link-active-color);
+        }
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--header-button-text);
+        }
+        .pagination .page-item.disabled .page-link {
+            color: var(--muted-text-color);
+            background-color: transparent; /* Or var(--bg-color) for subtle difference */
+            border-color: var(--border-color);
+        }
+        /* Footer styles are inherited from base.html */
+    </style>
+{% endblock extra_head %}
+
+{% block content %}
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      <div id="attendSuccessToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+        <div class="d-flex">
+          <div class="toast-body">
+            <i class="fas fa-check-circle me-2"></i>Successfully registered for the event!
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-4 mb-5">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold">Alumni Events</h1>
+            <p class="lead">Discover our events, workshops, and meetups in our alumni network.</p>
+        </div>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-9 col-lg-7">
+                <form class="d-flex search-form-event" role="search" method="GET" action="{% url 'AlumniPortal:events' %}">
+                    <input class="form-control me-0" type="search" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search events..." aria-label="Search events">
+                    <button class="btn btn-primary px-3" type="submit">
+                        <i class="fas fa-search me-1"></i>Search
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {% if events %}
+            <div class="event-list-container">
+                {% for event in events %}
+                <div class="card event-card mb-4 shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-md-3 event-card-img-wrapper">
+                            {% if event.image %}
+                                <img src="{{ event.image.url }}" class="event-card-img" alt="{{ event.title|truncatechars:50 }}">
+                            {% else %}
+                                <img src="{% static 'AlumniPortal/images/event_placeholder.png' %}" class="event-card-img" alt="Event placeholder">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ event.title }}</h4>
+                                <p class="event-description">{{ event.description|striptags|truncatewords_html:25 }}</p>
+
+                                <div class="row align-items-center">
+                                    <div class="col-lg-5 event-details-column mb-2 mb-lg-0">
+                                        <p>
+                                            <strong><i class="fas fa-tag fa-fw"></i>Type:</strong>
+                                            <span class="badge">{{ event.get_event_type_display|default:"General" }}</span>
+                                        </p>
+                                        {% if event.organizer %}
+                                        <p>
+                                            <strong><i class="fas fa-user-tie fa-fw"></i>Organizer:</strong>
+                                            {{ event.organizer.get_full_name|default:event.organizer.username }}
+                                        </p>
+                                        {% endif %}
+                                        {% if event.location %}
+                                        <p>
+                                            <strong><i class="fas fa-map-marker-alt fa-fw"></i>Location:</strong>
+                                            {{ event.location }}
+                                        </p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-4 event-details-column mb-2 mb-lg-0">
+                                        <p>
+                                            <i class="fas fa-calendar-alt fa-fw"></i>
+                                            <strong>From:</strong> {{ event.start_time|date:"D, M j, Y, P" }}
+                                        </p>
+                                        {% if event.end_time %}
+                                        <p>
+                                            <i class="fas fa-clock fa-fw"></i>
+                                            <strong>To:</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ event.end_time|date:"D, M j, Y, P" }}
+                                        </p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-3 event-action-wrapper">
+                                        <button class="btn btn-success btn-attend-event w-100" data-event-id="{{ event.id }}">
+                                            <i class="fas fa-calendar-check me-1"></i>Attend
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page=1">&laquo;&laquo; <span class="d-none d-sm-inline">First</span></a></li>
+                        <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}">&laquo; <span class="d-none d-sm-inline">Previous</span></a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;&laquo; <span class="d-none d-sm-inline">First</span></span></li>
+                        <li class="page-item disabled"><span class="page-link">&laquo; <span class="d-none d-sm-inline">Previous</span></span></li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active" aria-current="page"><span class="page-link">{{ num }}</span></li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ num }}">{{ num }}</a></li>
+                        {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                            {% ifchanged %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endifchanged %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}"><span class="d-none d-sm-inline">Next</span> &raquo;</a></li>
+                        <li class="page-item"><a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.paginator.num_pages }}"><span class="d-none d-sm-inline">Last</span> &raquo;&raquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link"><span class="d-none d-sm-inline">Next</span> &raquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link"><span class="d-none d-sm-inline">Last</span> &raquo;&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        {% else %}
+            <div class="alert alert-light text-center p-4 p-md-5 border shadow-sm" role="alert">
+                <i class="fas fa-calendar-times fa-3x text-primary mb-3"></i>
+                <h4 class="alert-heading">No Events Found</h4>
+                <p class="mb-0">There are currently no events matching your criteria or no events scheduled at this time. Please check back later or try a different search.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}
+
+{% block extra_scripts %}
+    <!-- Bootstrap Bundle JS (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Theme Toggle Logic is now in base.html
+
+        // Existing Toast Logic for Attend Button
+        const attendButtons = document.querySelectorAll('.btn-attend-event');
+        const toastElement = document.getElementById('attendSuccessToast');
+
+        if (toastElement) {
+            const toastBootstrap = new bootstrap.Toast(toastElement);
+
+            attendButtons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    // Here you would typically make an AJAX call to register the user for the event
+                    // For now, we'll just show the toast.
+                    console.log('Attend button clicked for event ID:', this.dataset.eventId);
+                    toastBootstrap.show();
+                });
+            });
+        }
+    });
+    </script>
+{% endblock extra_scripts %}

@@ -1,0 +1,241 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title|default:"News Article" }} - Alumni Portal</title>
+
+    <!-- Font Awesome for icons (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Link to your main style.css for other page styles (optional, if you still have one) -->
+    <!-- <link rel="stylesheet" href="{% static 'AlumniPortal/css/style.css' %}"> -->
+
+    <style>
+        /* Basic Reset & Body Styles */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Styles for your Custom Header */
+        .custom-site-header {
+            background-color: #fff; /* Example background */
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .custom-site-header .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-site-header .college-logo {
+            height: 50px; /* Adjust as needed */
+            margin-right: 15px;
+        }
+
+        .custom-site-header .college-name h2,
+        .custom-site-header .college-name h3,
+        .custom-site-header .college-name p {
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .custom-site-header .college-name h2 {
+            font-size: 1.4em;
+            color: #003366; /* Example color */
+        }
+
+        .custom-site-header .college-name h3 {
+            font-size: 1.1em;
+            color: #0056b3; /* Example color */
+        }
+
+        .custom-site-header .college-name p {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .custom-site-header .navigation a {
+            color: #333;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-site-header .navigation a:hover,
+        .custom-site-header .navigation a.active {
+            background-color: #e9ecef; /* Example hover/active style */
+        }
+
+        .custom-site-header .navigation .nav-button {
+            background-color: #007bff; /* Example button color */
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        .custom-site-header .navigation .nav-button:hover {
+            background-color: #0056b3; /* Darker on hover */
+        }
+
+        /* Styles for News Detail Content Area */
+        .news-detail-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.07);
+        }
+
+        .news-detail-container .article-title {
+            font-size: 2.2em;
+            color: #333;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .news-detail-container .article-meta {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .news-detail-container .article-image {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+
+        .news-detail-container .article-content {
+            font-size: 1.1em;
+            line-height: 1.7;
+        }
+        .news-detail-container .article-content p {
+            margin-bottom: 1em;
+        }
+
+        .back-to-news-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .back-to-news-link:hover {
+            background-color: #5a6268;
+        }
+
+        /* Responsive adjustments for the custom header */
+        @media (max-width: 850px) { /* Adjust breakpoint as needed */
+            .custom-site-header {
+                flex-direction: column;
+                align-items: flex-start; /* Or center, depending on preference */
+            }
+            .custom-site-header .navigation {
+                margin-top: 15px;
+                width: 100%;
+                display: flex;
+                flex-direction: column; /* Stack nav items vertically */
+                align-items: flex-start; /* Or center */
+            }
+            .custom-site-header .navigation a {
+                margin-left: 0;
+                margin-bottom: 8px; /* Space between stacked items */
+                width: 100%; /* Make links take full width for easier tapping */
+                box-sizing: border-box;
+            }
+            .custom-site-header .navigation .nav-button {
+                 margin-left: 0; /* Reset margin for buttons too */
+                 width: auto; /* Or 100% if you want full-width buttons */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Your Custom Header directly embedded -->
+    <header class="custom-site-header">
+        <div class="nav-left">
+            <img src="{% static 'AlumniPortal/images/logo.png' %}" alt="College Logo" class="college-logo">
+            <div class="college-name">
+                <h2>TKIET Warananagar</h2>
+                <h3>Alumni Portal</h3>
+                <p>Empowering Connections, Enriching Futures</p>
+            </div>
+        </div>
+        <nav class="navigation">
+            <a href="{% url 'AlumniPortal:home' %}" {% if request.resolver_match.view_name == 'AlumniPortal:home' %}class="active"{% endif %}>Home</a>
+            <a href="{% url 'AlumniPortal:events' %}" {% if request.resolver_match.view_name == 'AlumniPortal:events' %}class="active"{% endif %}>Events</a>
+            <a href="{% url 'AlumniPortal:news' %}" {% if request.resolver_match.view_name == 'AlumniPortal:news' or request.resolver_match.view_name == 'AlumniPortal:news_detail' %}class="active"{% endif %}>News</a>
+            <a href="{% url 'AlumniPortal:about' %}" {% if request.resolver_match.view_name == 'AlumniPortal:about' %}class="active"{% endif %}>About Us</a>
+            <a href="{% url 'AlumniPortal:contact' %}" {% if request.resolver_match.view_name == 'AlumniPortal:contact' %}class="active"{% endif %}>Contact</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'AlumniPortal:view_profile' %}" class="nav-button {% if request.resolver_match.view_name == 'AlumniPortal:view_profile' or request.resolver_match.view_name == 'AlumniPortal:edit_profile' %}active{% endif %}">My Profile</a>
+                <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button {% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a>
+                <a href="{% url 'AlumniPortal:register' %}" class="nav-button {% if request.resolver_match.view_name == 'AlumniPortal:register' %}active{% endif %}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- Main content for the news detail page -->
+    <div class="news-detail-container">
+        {% if article %}
+            <h1 class="article-title">{{ article.title }}</h1>
+            <p class="article-meta">
+                Published on {{ article.published_date|date:"F j, Y, P" }}
+                {% if article.author %}
+                    by {{ article.author.get_full_name|default:article.author.username }}
+                {% endif %}
+            </p>
+
+            {% if article.image %}
+                <img src="{{ article.image.url }}" alt="{{ article.title }}" class="article-image">
+            {% endif %}
+
+            <div class="article-content">
+                {{ article.content|linebreaksbr }} {# Use linebreaksbr or safe filter if content contains HTML #}
+            </div>
+
+            <a href="{% url 'AlumniPortal:news' %}" class="back-to-news-link">
+                <i class="fas fa-arrow-left"></i> Back to News
+            </a>
+        {% else %}
+            <p>Article not found.</p>
+            <a href="{% url 'AlumniPortal:news' %}" class="back-to-news-link">
+                <i class="fas fa-arrow-left"></i> Back to News
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- You might want a simple footer here too if not using base.html -->
+    <footer style="text-align: center; padding: 20px; background-color: #333; color: white; margin-top: 30px;">
+        <p>&copy; {% now "Y" %} Alumni Portal. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

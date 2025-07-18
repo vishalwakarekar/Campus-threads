@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - TKIET Alumni Portal</title>
+
+    {# Link to main stylesheet #}
+    <link rel="stylesheet" href="{% static 'AlumniPortal/style.css' %}">
+
+    {# Font Awesome & Google Fonts (Optional, but good for consistency) #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Ensure body padding for fixed header is handled by style.css */
+
+        main {
+             flex-grow: 1; /* Allow main content to push footer down */
+             width: 100%;
+             padding: 50px 20px; /* Add padding top/bottom */
+             display: flex;
+             justify-content: center;
+             align-items: center; /* Vertically center the container */
+        }
+
+        .register-container {
+            max-width: 500px; /* Adjust width as needed */
+            width: 100%;
+            background-color: #fff;
+            padding: 40px 45px; /* More padding */
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .register-container h2 {
+            color: #0056b3; /* Theme color */
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        /* Style Django form elements */
+        .register-container form p {
+            margin-bottom: 18px; /* Space between form fields */
+            text-align: left; /* Align labels left */
+        }
+        .register-container form label {
+            display: block; /* Label on its own line */
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95em;
+        }
+        .register-container form input[type="text"],
+        .register-container form input[type="email"],
+        .register-container form input[type="password"],
+        .register-container form select { /* Style select dropdowns too */
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+        .register-container form input:focus {
+            border-color: #007bff; /* Highlight on focus */
+            outline: none;
+        }
+
+        /* Style error messages if using {{ form.errors }} */
+        .register-container .errorlist {
+            color: #dc3545; /* Red for errors */
+            list-style: none;
+            padding: 0;
+            margin: -10px 0 15px 0;
+            font-size: 0.9em;
+            text-align: left;
+        }
+
+        /* Style the submit button */
+        .register-container button[type="submit"] {
+            background-color: #007bff; /* Use cta-button primary color */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%; /* Make button full width */
+            margin-top: 15px; /* Space above button */
+        }
+        .register-container button[type="submit"]:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+
+        .login-link {
+            margin-top: 25px;
+            font-size: 0.95em;
+            color: #555;
+        }
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Standard Site Header -->
+    <header>
+        <div class="nav-left">
+            <img src="{% static 'AlumniPortal/images/logo.png' %}" alt="College Logo" class="college-logo">
+            <div class="college-name">
+                <h2>TKIET Warananagar</h2>
+                <h3>Alumni Portal</h3>
+                <p>Empowering Connections, Enriching Futures</p>
+            </div>
+        </div>
+        <nav class="navigation">
+            {# Make sure these URLs use the namespace if you fixed it #}
+            <a href="{% url 'AlumniPortal:home' %}">Home</a>
+            <a href="{% url 'AlumniPortal:about' %}">About Us</a>
+            <a href="{% url 'AlumniPortal:contact' %}">Contact</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'AlumniPortal:view_profile' %}" class="nav-button">My Profile</a>
+                <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button">Login</a>
+                <a href="{% url 'AlumniPortal:register' %}" class="nav-button active">Register</a> {# Active state #}
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <div class="register-container">
+            <h2>Create Your Account</h2>
+
+            <form method="post" action="{% url 'AlumniPortal:register' %}">
+                {% csrf_token %}
+
+                {# Render form fields as paragraphs - includes labels, inputs, errors #}
+                {{ form.as_p }}
+
+                <button type="submit">Register</button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="{% url 'login' %}">Login here</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Standard Site Footer -->
+    <footer>
+        &copy; {% now "Y" %} Anuj Waghmare. All rights reserved.
+    </footer>
+
+</body>
+</html>

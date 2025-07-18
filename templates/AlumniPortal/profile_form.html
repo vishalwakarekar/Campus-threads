@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'AlumniPortal/style.css' %}"> -->
+
+    <style>
+        /* --- Base Styles & Variables --- */
+        :root {
+            --primary-color: #1abc9c; /* Teal */
+            --primary-dark: #16a085;  /* Darker Teal */
+            --secondary-color: #e74c3c; /* Contrasting Coral/Red */
+            --secondary-dark: #c0392b; /* Darker Coral/Red */
+            --cover-gradient-start: #2980b9; /* Blue gradient for cover */
+            --cover-gradient-end: #6dd5fa;   /* Lighter blue */
+
+            --light-gray: #f4f6f9;
+            --medium-gray: #e1e5eb;
+            --dark-gray: #869099;
+            --text-color: #34495e;
+            --card-bg: #ffffff;
+            --card-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+            --border-radius: 10px;
+            --transition-speed: 0.3s;
+            --header-height: 80px; /* Approximate header height - ADJUST IF NEEDED */
+            --danger-color: #dc3545; /* For errors */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: var(--header-height);
+        }
+
+        /* --- Main Content Wrapper --- */
+        main {
+            flex-grow: 1;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        /* --- Form Container Styling --- */
+        .form-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 35px 40px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: var(--primary-dark);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* --- Form Field Styling --- */
+        .form-field {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        input[type="number"],
+        input[type="password"],
+        select,
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-top: 4px;
+            font-family: inherit;
+            font-size: 1em;
+            color: var(--text-color);
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="url"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus,
+        select:focus,
+        textarea:focus,
+        input[type="file"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.2);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            padding: 8px 12px;
+        }
+
+        /* --- Helper Text and Errors --- */
+        .helptext {
+            font-size: 0.8em;
+            color: var(--dark-gray);
+            display: block;
+            margin-top: 5px;
+            padding-left: 2px;
+        }
+
+        .errorlist {
+            color: var(--danger-color);
+            list-style-type: none;
+            padding-left: 0;
+            margin: 6px 0 0 0;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .form-field .errorlist {
+             margin-top: 5px;
+        }
+
+        /* --- Profile Photo Section --- */
+        .current-photo-section {
+            margin-bottom: 10px;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border: 1px dashed var(--medium-gray);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .current-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            border: 3px solid var(--card-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: var(--medium-gray);
+        }
+
+        .current-photo.placeholder {
+             /* Optional: Add specific styles if needed for placeholder */
+             /* Example: background-color: var(--medium-gray); */
+        }
+
+        .photo-input-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .clear-photo-checkbox {
+            display: inline-flex;
+            align-items: center;
+        }
+        .clear-photo-checkbox label {
+            display: inline-block;
+            margin-left: 8px;
+            margin-bottom: 0;
+            font-weight: normal;
+            font-size: 0.9em;
+            color: var(--dark-gray);
+            cursor: pointer;
+        }
+        .clear-photo-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-top: 0;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .photo-input-controls input[type="file"] {
+             margin-top: 0;
+        }
+
+        /* --- Form Actions (Buttons) --- */
+        .form-actions {
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .action-button.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .action-button.primary:hover { background-color: var(--primary-dark); }
+
+        a.cancel-link {
+            color: var(--dark-gray);
+            text-decoration: none;
+            padding: 10px 0;
+            font-size: 0.95em;
+            transition: color var(--transition-speed);
+        }
+        a.cancel-link:hover {
+            color: var(--text-color);
+            text-decoration: underline;
+        }
+
+        /* --- Styles for Standard Header and Footer --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 0.8rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            height: var(--header-height);
+        }
+        .nav-left { display: flex; align-items: center; }
+        .college-logo { height: 50px; margin-right: 15px; }
+        .college-name h2, .college-name h3, .college-name p { margin: 0; line-height: 1.2; }
+        .college-name h2 { font-size: 1.3em; color: #003366; font-weight: bold;}
+        .college-name h3 { font-size: 1.0em; color: #0056b3; }
+        .college-name p { font-size: 0.85em; color: #555; }
+        .navigation { display: flex; align-items: center; }
+        .navigation a { color: #333; text-decoration: none; margin-left: 15px; padding: 8px 12px; border-radius: 4px; transition: background-color 0.2s ease, color 0.2s ease; font-size: 1em; font-weight: 500; }
+        .navigation a:hover { background-color: #eee; color: #007bff; }
+        .navigation .nav-button { background-color: #007bff; color: white !important; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none; display: inline-block; text-align: center; margin-left: 15px; font-size: 1em; font-weight: 500; }
+        .navigation .nav-button:hover { background-color: #0056b3; color: white !important; }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.95em;
+            color: #f8f9fa;
+            background-color: #343a40;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+             header {
+                padding: 0.5rem 1rem;
+                height: auto;
+             }
+             body { padding-top: 60px; }
+             main { padding: 30px 15px; }
+             .form-container { padding: 25px; }
+        }
+         @media (max-width: 600px) {
+             .form-actions {
+                 flex-direction: column-reverse;
+                 align-items: stretch;
+                 gap: 10px;
+             }
+             a.cancel-link {
+                 text-align: center;
+                 margin-left: 0;
+             }
+             .action-button {
+                 width: 100%;
+                 justify-content: center;
+             }
+         }
+    </style>
+</head>
+<body>
+
+    <!-- Standard Site Header -->
+    <header>
+        <div class="nav-left">
+            <img src="{% static 'AlumniPortal/images/logo.png' %}" alt="College Logo" class="college-logo">
+            <div class="college-name">
+                <h2>TKIET Warananagar</h2>
+                <h3>Alumni Portal</h3>
+                <p>Empowering Connections, Enriching Futures</p>
+            </div>
+        </div>
+
+        <nav class="navigation">
+            <a href="{% url 'AlumniPortal:home' %}">Home</a>
+            <a href="{% url 'AlumniPortal:about' %}">About Us</a>
+            <a href="{% url 'AlumniPortal:contact' %}">Contact</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'AlumniPortal:view_profile' %}" class="nav-button">My Profile</a>
+                <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button">Login</a>
+                <a href="{% url 'AlumniPortal:register' %}" class="nav-button">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <div class="form-container">
+            <h2>Edit Your Profile</h2>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="errorlist non-field-errors">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="form-field">
+                        {{ field.label_tag }}
+
+                        {% if field.name == 'profile_photo' %}
+                            <div class="current-photo-section">
+                                {% if profile.profile_photo %}
+                                    <img src="{{ profile.profile_photo.url }}" alt="Current profile photo" class="current-photo">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/100/E1E5EB/869099?text=Photo" alt="No current photo" class="current-photo placeholder">
+                                {% endif %}
+                                <div class="photo-input-controls">
+                                    {{ field }}
+                                    {% if profile.profile_photo and field.field.widget.clear_checkbox_label %}
+                                    <span class="clear-photo-checkbox">
+                                        {{ field.field.widget.clear_checkbox_input }}
+                                        <label for="{{ field.field.widget.clear_checkbox_id }}">{{ field.field.widget.clear_checkbox_label }}</label>
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                             {{ field }}
+                        {% endif %}
+
+                        {% if field.help_text %}
+                            <span class="helptext">{{ field.help_text|safe }}</span>
+                        {% endif %}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+
+
+                <div class="form-actions">
+                    <button type="submit" class="action-button primary">Save Changes</button>
+                    <a href="{% url 'AlumniPortal:view_profile' %}" class="cancel-link">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Standard Site Footer -->
+    <footer>
+        &copy; {% now "Y" %} Anuj Waghmare. All rights reserved.
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+/* D:/miniproj/AluminiPortal/static/AlumniPortal/css/main_styles.css */
+
+/* D:/miniproj/AluminiPortal/static/AlumniPortal/css/main_styles.css */
+
+/* CSS Variables for Theming */
+:root {
+    --bg-color: #f8f9fa; /* Default light theme background */
+    --text-color: #212529;
+    --card-bg: #fff;
+    --header-bg: rgba(255, 255, 255, 0.95);
+    --header-border: #dee2e6;
+    --header-link-color: #333;
+    --header-link-active-bg: #eee;
+    --header-link-active-color: #007bff;
+    --header-button-bg: #007bff;
+    --header-button-text: #fff;
+    --header-button-hover-bg: #0056b3;
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --muted-text-color: #555;
+    --border-color: #eee;
+    --footer-bg: #343a40;
+    --footer-text: #f8f9fa;
+    --shadow-color: rgba(0,0,0,0.1);
+    --card-hover-shadow-color: rgba(0,0,0,0.12);
+    --theme-toggle-icon-color: #495057;
+    --theme-toggle-hover-bg: #e9ecef;
+    --theme-transition-duration: 0.3s;
+    /* Add any Bootstrap 5.3+ specific variables if you use them directly */
+    --bs-success-bg-subtle: #d1e7dd; /* Light theme example */
+    --bs-success-text-emphasis: #0f5132; /* Light theme example */
+
+}
+
+body.dark-theme {
+    --bg-color: #1a1a1a; /* Dark theme background */
+    --text-color: #e0e0e0;
+    --card-bg: #2c2c2c;
+    --header-bg: rgba(34, 34, 34, 0.95);
+    --header-border: #444;
+    --header-link-color: #c0c0c0;
+    --header-link-active-bg: #3a3a3a;
+    --header-link-active-color: #87cefa;
+    --header-button-bg: #1e90ff;
+    --header-button-hover-bg: #4682b4;
+    --primary-color: #4dabf7;
+    --secondary-color: #868e96;
+    --muted-text-color: #a0a0a0;
+    --border-color: #444;
+    --footer-bg: #111;
+    --footer-text: #c0c0c0;
+    --shadow-color: rgba(255,255,255,0.05);
+    --card-hover-shadow-color: rgba(255,255,255,0.1);
+    --theme-toggle-icon-color: #c0c0c0;
+    --theme-toggle-hover-bg: #3a3a3a;
+    /* Add any Bootstrap 5.3+ specific variables for dark theme */
+    --bs-success-bg-subtle: #03160e; /* Dark theme example */
+    --bs-success-text-emphasis: #75b798; /* Dark theme example */
+    /* Define --primary-subtle-bg and --primary-emphasis-text for dark theme if needed */
+    --primary-subtle-bg: #032845; /* Example for dark theme */
+    --primary-emphasis-text: #7ab5f0; /* Example for dark theme */
+
+}
+
+html { box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
+
+body {
+    font-family: 'Poppins', sans-serif; /* Ensures Poppins is used */
+    line-height: 1.6;
+    margin: 0;
+    padding: 0; /* Padding for sticky header is handled by body.has-sticky-header */
+    background-color: var(--bg-color); /* This line applies the theme background */
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+}
+
+/* ... rest of your main_styles.css including .custom-site-header, .navigation, etc. ... */
+
+.custom-site-header .navigation a {
+    color: var(--header-link-color);
+    text-decoration: none;
+    margin-left: 15px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: 500; /* Or 600 for more boldness - this makes navbar links bolder */
+    transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+}
+
+/* Reusable Container */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Styles for your Custom Header (From events.html) */
+.custom-site-header {
+    background-color: var(--header-bg);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--header-border);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    transition: background-color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
+}
+.custom-site-header .nav-left { display: flex; align-items: center; }
+.custom-site-header .college-logo { height: 50px; margin-right: 15px; }
+.custom-site-header .college-name h2,
+.custom-site-header .college-name h3,
+.custom-site-header .college-name p { margin: 0; line-height: 1.2; transition: color var(--theme-transition-duration) ease;}
+.custom-site-header .college-name h2 { font-size: 1.4em; color: var(--header-link-active-color); }
+.custom-site-header .college-name h3 { font-size: 1.1em; color: var(--primary-color); }
+.custom-site-header .college-name p { font-size: 0.9em; color: var(--muted-text-color); }
+
+.custom-site-header .navigation { display: flex; align-items: center; }
+.custom-site-header .navigation a {
+    color: var(--header-link-color);
+    text-decoration: none;
+    margin-left: 15px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+}
+.custom-site-header .navigation a:hover,
+.custom-site-header .navigation a.active {
+    background-color: var(--header-link-active-bg);
+    color: var(--header-link-active-color);
+}
+.custom-site-header .navigation .nav-button {
+    background-color: var(--header-button-bg);
+    color: var(--header-button-text) !important;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-left: 15px;
+    border: none;
+    transition: background-color var(--theme-transition-duration) ease;
+}
+.custom-site-header .navigation .nav-button:hover { background-color: var(--header-button-hover-bg); }
+.custom-site-header .navigation .nav-button.active { background-color: var(--header-button-hover-bg); }
+
+/* Theme Toggle Button Styles (From events.html) */
+.theme-toggle-button {
+    background: none;
+    border: none;
+    color: var(--theme-toggle-icon-color);
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    margin-left: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+}
+.theme-toggle-button:hover {
+    background-color: var(--theme-toggle-hover-bg);
+}
+.theme-toggle-button .fa-sun { display: none; }
+body.dark-theme .theme-toggle-button .fa-sun { display: inline-block; }
+body.dark-theme .theme-toggle-button .fa-moon { display: none; }
+
+
+/* Responsive adjustments for the custom header (From events.html) */
+@media (max-width: 850px) {
+    .custom-site-header { flex-direction: column; align-items: flex-start; padding: 1rem; }
+    .custom-site-header .nav-left { margin-bottom: 1rem; }
+    .custom-site-header .navigation { margin-top: 1rem; width: 100%; display: flex; flex-direction: column; align-items: flex-start; }
+    .custom-site-header .navigation a,
+    .custom-site-header .navigation .theme-toggle-button {
+        margin-left: 0; margin-bottom: 0.5rem; width: 100%; box-sizing: border-box;
+    }
+    .custom-site-header .navigation .nav-button { margin-left: 0; width: auto; }
+}
+
+/* Footer Styles (Using base.html structure but events.html style) */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    margin-top: auto;
+    transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+    flex-shrink: 0;
+}
+footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--theme-transition-duration) ease;
+}
+footer a:hover {
+    text-decoration: underline;
+    color: var(--header-button-hover-bg);
+}
+
+/* Add a class to body or a main wrapper if you need padding for the sticky header */
+body.has-sticky-header {
+    padding-top: 80px; /* Adjust this value to match your header's height */
+}

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.full_name }}'s Profile</title>
+    {% load static %}
+    {# Font Awesome CDN Link #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {# Optional: Google Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {# Link to your main CSS file - Recommended #}
+    {# <link rel="stylesheet" href="{% static 'AlumniPortal/style.css' %}"> #}
+
+    <style>
+        /* --- Base Styles & Variables (Using Teal Theme as Light) --- */
+        :root {
+            --primary-color: #1abc9c; /* Teal */
+            --primary-dark: #16a085;  /* Darker Teal */
+            --secondary-color: #e74c3c; /* Contrasting Coral/Red */
+            --secondary-dark: #c0392b; /* Darker Coral/Red */
+            --cover-gradient-start: #2980b9; /* Blue gradient for cover */
+            --cover-gradient-end: #6dd5fa;   /* Lighter blue */
+
+            --bg-color: #f4f6f9; /* Was --light-gray */
+            --medium-gray: #e1e5eb;
+            --dark-gray-text: #869099; /* For less prominent text */
+            --text-color: #34495e;
+            --card-bg: #ffffff;
+            --card-shadow-color: rgba(0, 0, 0, 0.07);
+            --border-color: #e1e5eb; /* Replaces --medium-gray for borders */
+            --border-radius: 10px;
+            --transition-speed: 0.3s;
+            --header-height: 80px;
+
+            /* Standard Header Theming (Light) */
+            --std-header-bg: rgba(255, 255, 255, 0.95);
+            --std-header-shadow: rgba(0,0,0,0.1);
+            --std-header-college-name-h2: #003366;
+            --std-header-college-name-h3: #0056b3;
+            --std-header-college-name-p: #555;
+            --std-header-nav-link: #333;
+            --std-header-nav-link-hover-bg: #eee;
+            --std-header-nav-link-hover-text: #007bff;
+            --std-header-nav-button-bg: #007bff;
+            --std-header-nav-button-text: white;
+            --std-header-nav-button-hover-bg: #0056b3;
+
+            /* Footer Theming (Light) */
+            --footer-bg: #343a40;
+            --footer-text: #f8f9fa;
+
+            /* Theme Toggle Button (Light) */
+            --theme-toggle-icon-color: #495057;
+            --theme-toggle-hover-bg: #e9ecef;
+        }
+
+        body.dark-theme {
+            --primary-color: #20c997; /* Brighter Teal for dark */
+            --primary-dark: #1db98a;
+            --secondary-color: #f07167; /* Brighter Coral for dark */
+            --secondary-dark: #e65f55;
+            --cover-gradient-start: #1c5a82; /* Darker Blue gradient */
+            --cover-gradient-end: #4aadd4;
+
+            --bg-color: #1a1d24; /* Dark background */
+            --medium-gray: #3a3f4b; /* Darker medium gray */
+            --dark-gray-text: #9098a1;
+            --text-color: #d1d5db; /* Light text */
+            --card-bg: #2c323f; /* Dark card background */
+            --card-shadow-color: rgba(0, 0, 0, 0.2); /* More pronounced shadow for dark */
+            --border-color: #4a505c; /* Darker border */
+
+            /* Standard Header Theming (Dark) */
+            --std-header-bg: rgba(30, 33, 41, 0.95); /* Dark header bg */
+            --std-header-shadow: rgba(0,0,0,0.3);
+            --std-header-college-name-h2: #a6d8ff; /* Light blue */
+            --std-header-college-name-h3: #79c0ff; /* Lighter blue */
+            --std-header-college-name-p: #9098a1;
+            --std-header-nav-link: #d1d5db;
+            --std-header-nav-link-hover-bg: #3a3f4b;
+            --std-header-nav-link-hover-text: #79c0ff;
+            --std-header-nav-button-bg: #1e90ff; /* Brighter blue */
+            --std-header-nav-button-text: white;
+            --std-header-nav-button-hover-bg: #4682b4;
+
+            /* Footer Theming (Dark) */
+            --footer-bg: #1f232b;
+            --footer-text: #b0b6bf;
+
+            /* Theme Toggle Button (Dark) */
+            --theme-toggle-icon-color: #b0b6bf;
+            --theme-toggle-hover-bg: #3a3f4b;
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: var(--header-height);
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .profile-container {
+             max-width: 900px;
+             width: 100%;
+             opacity: 0;
+             transform: translateY(20px);
+             animation: fadeInCard 0.6s ease-out forwards;
+             animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInCard {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-header-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: visible;
+            box-shadow: 0 5px 20px var(--card-shadow-color);
+            position: relative;
+            margin-bottom: 30px;
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        .cover-photo {
+            background: linear-gradient(to right, var(--cover-gradient-start), var(--cover-gradient-end));
+            height: 180px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            transition: background var(--transition-speed) ease;
+        }
+
+        .profile-header-content {
+            padding: 20px 30px 30px 30px;
+            margin-top: -60px;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--card-bg);
+            background-color: var(--medium-gray); /* Fallback/placeholder bg */
+            box-shadow: 0 3px 10px var(--card-shadow-color);
+            position: absolute;
+            top: 0;
+            left: 30px;
+            transform: translateY(-20%);
+            z-index: 2;
+            transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease;
+        }
+
+        .profile-main-info {
+            padding-top: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .profile-name-details {
+             width: 100%;
+             margin-bottom: 20px;
+        }
+
+        .profile-name-details h1 {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .profile-name-details .tagline {
+            color: var(--dark-gray-text);
+            margin-bottom: 15px;
+            font-size: 1.05em;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .header-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            font-size: 0.9em;
+            color: var(--dark-gray-text);
+            align-items: center;
+            transition: color var(--transition-speed) ease;
+        }
+        .header-details span,
+        .header-details a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--dark-gray-text);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .header-details a {
+            color: var(--primary-color);
+        }
+        .header-details a:hover {
+            color: var(--primary-dark);
+        }
+         .header-details i {
+            width: 16px;
+            text-align: center;
+            opacity: 0.8;
+            color: var(--primary-color); /* Ensure icon color matches link or is distinct */
+            transition: color var(--transition-speed) ease;
+         }
+
+        .profile-header-actions {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 3;
+        }
+
+        .action-button-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            font-size: 1em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed), color var(--transition-speed);
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .action-button-icon:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        body.dark-theme .action-button-icon { /* Adjust for dark theme if needed */
+            background-color: rgba(200, 200, 200, 0.15);
+            color: #e0e0e0;
+        }
+        body.dark-theme .action-button-icon:hover {
+            background-color: rgba(200, 200, 200, 0.25);
+        }
+
+
+        .profile-details-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .profile-section {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 20px var(--card-shadow-color);
+            padding: 25px 30px;
+            margin-bottom: 0;
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease;
+        }
+
+        .profile-section h3 {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+        }
+         .profile-section h3 i {
+            font-size: 0.9em;
+            color: var(--primary-color); /* Match primary color for heading icons */
+            transition: color var(--transition-speed) ease;
+         }
+
+        .profile-details dl {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+        .profile-details dt {
+            font-weight: 500;
+            color: var(--dark-gray-text);
+            font-size: 0.9em;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color var(--transition-speed) ease;
+        }
+         .profile-details dt i {
+            color: var(--primary-color);
+            font-size: 1.1em;
+            width: 20px;
+            text-align: center;
+            transition: color var(--transition-speed) ease;
+         }
+        .profile-details dd {
+            margin-left: 28px;
+            font-size: 1em;
+            word-wrap: break-word;
+            color: var(--text-color);
+            transition: color var(--transition-speed) ease;
+        }
+        .profile-details dd a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .profile-details dd a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        .profile-section > p {
+             margin-top: 0;
+             color: var(--text-color);
+             transition: color var(--transition-speed) ease;
+        }
+
+        /* --- Styles for Standard Header and Footer --- */
+        header.site-standard-header { /* Added class for specificity */
+            background-color: var(--std-header-bg);
+            padding: 0.8rem 2rem;
+            box-shadow: 0 2px 4px var(--std-header-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            height: var(--header-height);
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+        .site-standard-header .nav-left { display: flex; align-items: center; }
+        .site-standard-header .college-logo { height: 50px; margin-right: 15px; }
+        .site-standard-header .college-name h2,
+        .site-standard-header .college-name h3,
+        .site-standard-header .college-name p {
+            margin: 0; line-height: 1.2;
+            transition: color var(--transition-speed) ease;
+        }
+        .site-standard-header .college-name h2 { font-size: 1.3em; color: var(--std-header-college-name-h2); font-weight: bold;}
+        .site-standard-header .college-name h3 { font-size: 1.0em; color: var(--std-header-college-name-h3); }
+        .site-standard-header .college-name p { font-size: 0.85em; color: var(--std-header-college-name-p); }
+
+        .site-standard-header .navigation { display: flex; align-items: center; }
+        .site-standard-header .navigation a {
+            color: var(--std-header-nav-link);
+            text-decoration: none; margin-left: 15px; padding: 8px 12px; border-radius: 4px;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            font-size: 1em; font-weight: 500;
+        }
+        .site-standard-header .navigation a:hover,
+        .site-standard-header .navigation a.active {
+            background-color: var(--std-header-nav-link-hover-bg);
+            color: var(--std-header-nav-link-hover-text);
+        }
+        .site-standard-header .navigation .nav-button {
+            background-color: var(--std-header-nav-button-bg);
+            color: var(--std-header-nav-button-text) !important;
+            border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;
+            transition: background-color var(--transition-speed) ease;
+            text-decoration: none; display: inline-block; text-align: center; margin-left: 15px;
+            font-size: 1em; font-weight: 500;
+        }
+        .site-standard-header .navigation .nav-button:hover,
+        .site-standard-header .navigation .nav-button.active {
+            background-color: var(--std-header-nav-button-hover-bg);
+            color: var(--std-header-nav-button-text) !important;
+        }
+
+        /* Theme Toggle Button Styles (for standard header) */
+        .site-standard-header .theme-toggle-button {
+            background: none; border: none;
+            color: var(--theme-toggle-icon-color);
+            font-size: 1.2rem; padding: 8px 12px; margin-left: 15px;
+            cursor: pointer; border-radius: 4px;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+        .site-standard-header .theme-toggle-button:hover {
+            background-color: var(--theme-toggle-hover-bg);
+        }
+        .site-standard-header .theme-toggle-button .fa-sun { display: none; }
+        body.dark-theme .site-standard-header .theme-toggle-button .fa-sun { display: inline-block; }
+        body.dark-theme .site-standard-header .theme-toggle-button .fa-moon { display: none; }
+
+
+        footer.site-standard-footer { /* Added class for specificity */
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.95em;
+            color: var(--footer-text);
+            background-color: var(--footer-bg);
+            width: 100%;
+            flex-shrink: 0;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 900px) {
+             .profile-details-content {
+                grid-template-columns: 1fr;
+             }
+        }
+
+        @media (max-width: 768px) {
+             header.site-standard-header {
+                padding: 0.5rem 1rem;
+                height: auto;
+                flex-direction: column; /* Stack header items on mobile */
+                align-items: flex-start;
+             }
+             .site-standard-header .navigation {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-start; /* Align nav items to start */
+                flex-wrap: wrap;
+             }
+             .site-standard-header .navigation a,
+             .site-standard-header .navigation .theme-toggle-button {
+                 margin: 5px 10px 5px 0; /* Adjust spacing */
+             }
+
+             body { padding-top: 100px; } /* Adjust if header becomes taller when stacked */
+
+            .profile-header-content {
+                margin-top: -50px;
+                padding: 15px;
+            }
+            .profile-pic {
+                width: 100px;
+                height: 100px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+            }
+            .profile-main-info {
+                padding-top: 60px;
+                align-items: center;
+                text-align: center;
+            }
+            .header-details {
+                justify-content: center;
+                gap: 5px 15px;
+            }
+            .profile-header-actions {
+                top: 10px;
+                right: 10px;
+            }
+            .action-button-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 600px) {
+            main { padding: 20px 10px; }
+            .cover-photo { height: 140px; }
+            .profile-name-details h1 { font-size: 1.5em; }
+            .profile-name-details .tagline { font-size: 0.95em; margin-bottom: 10px;}
+            .header-details { font-size: 0.85em; }
+            .profile-details-content { gap: 20px; }
+            .profile-section { padding: 20px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Standard Site Header -->
+    <header class="site-standard-header">
+        <div class="nav-left">
+            <img src="{% static 'AlumniPortal/images/logo.png' %}" alt="College Logo" class="college-logo">
+            <div class="college-name">
+                <h2>TKIET Warananagar</h2>
+                <h3>Alumni Portal</h3>
+                <p>Empowering Connections, Enriching Futures</p>
+            </div>
+        </div>
+        <nav class="navigation">
+            <a href="{% url 'AlumniPortal:home' %}" {% if request.resolver_match.view_name == 'AlumniPortal:home' %}class="active"{% endif %}>Home</a>
+            <a href="{% url 'AlumniPortal:events' %}" {% if request.resolver_match.view_name == 'AlumniPortal:events' %}class="active"{% endif %}>Events</a>
+            <a href="{% url 'AlumniPortal:news' %}" {% if request.resolver_match.view_name == 'AlumniPortal:news' or request.resolver_match.view_name == 'AlumniPortal:news_detail' %}class="active"{% endif %}>News</a>
+            <a href="{% url 'AlumniPortal:about' %}" {% if request.resolver_match.view_name == 'AlumniPortal:about' %}class="active"{% endif %}>About Us</a>
+            <a href="{% url 'AlumniPortal:contact' %}" {% if request.resolver_match.view_name == 'AlumniPortal:contact' %}class="active"{% endif %}>Contact</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'AlumniPortal:view_profile' %}" class="nav-button {% if request.resolver_match.view_name == 'AlumniPortal:view_profile' or request.resolver_match.view_name == 'AlumniPortal:edit_profile' %}active{% endif %}">My Profile</a>
+                <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button {% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a>
+                <a href="{% url 'AlumniPortal:register' %}" class="nav-button {% if request.resolver_match.view_name == 'AlumniPortal:register' %}active{% endif %}">Register</a>
+            {% endif %}
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" class="theme-toggle-button" title="Toggle theme">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <div class="profile-container">
+
+            <!-- Header Card -->
+            <div class="profile-header-card">
+                <div class="cover-photo"></div>
+
+                <!-- Action Buttons (Top Right) -->
+                <div class="profile-header-actions">
+                     <a href="{% url 'AlumniPortal:edit_profile' %}" class="action-button-icon" title="Edit Profile">
+                         <i class="fas fa-edit"></i>
+                     </a>
+                     <a href="{% url 'logout' %}" class="action-button-icon logout" title="Logout">
+                         <i class="fas fa-sign-out-alt"></i>
+                     </a>
+                </div>
+
+                <div class="profile-header-content">
+                    <img src="{{ profile.get_photo_url }}" alt="{{ profile.full_name }}'s profile photo" class="profile-pic">
+                    <div class="profile-main-info">
+                        <div class="profile-name-details">
+                            <h1>{{ profile.full_name }}</h1>
+                            <p class="tagline">{{ profile.current_job_title|default:profile.get_role_display }}</p> {# Job title or Role #}
+                            <div class="header-details">
+                                {% if profile.department %}
+                                <span><i class="fas fa-building"></i>{{ profile.department }}</span>
+                                {% endif %}
+                                {% if profile.batch_year %}
+                                <span><i class="fas fa-graduation-cap"></i>Class of {{ profile.batch_year }}</span>
+                                {% endif %}
+                                {% if profile.location %}
+                                <span><i class="fas fa-map-marker-alt"></i>{{ profile.location }}</span>
+                                {% endif %}
+                                {% if profile.user.email %}
+                                <a href="mailto:{{ profile.user.email }}"><i class="fas fa-envelope"></i>{{ profile.user.email }}</a>
+                                {% endif %}
+                                {% if profile.phone_number %}
+                                 <span><i class="fas fa-phone"></i>{{ profile.phone_number }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End profile-header-card -->
+
+            <!-- Details Content Area (Two Columns Below Header) -->
+            <div class="profile-details-content">
+
+                <!-- Column 1 -->
+                {% if profile.bio %}
+                <div class="profile-section"> <!-- Bio Box -->
+                    <h3><i class="fas fa-user-circle"></i>About Me</h3>
+                    <p>{{ profile.bio|linebreaksbr }}</p>
+                </div>
+                {% endif %}
+
+                {% if profile.skills %}
+                <div class="profile-section"> <!-- Skills Box -->
+                    <h3><i class="fas fa-cogs"></i>Skills</h3>
+                    <p>{{ profile.skills|linebreaksbr }}</p>
+                </div>
+                {% endif %}
+
+                <div class="profile-section">
+                     <h3><i class="fas fa-link"></i>Links & Contact</h3>
+                     <dl class="profile-details">
+                         {% if profile.linkedin_profile %}
+                         <div>
+                             <dt><i class="fab fa-linkedin"></i>LinkedIn:</dt>
+                             <dd><a href="{{ profile.linkedin_profile }}" target="_blank" rel="noopener noreferrer">{{ profile.linkedin_profile }}</a></dd>
+                         </div>
+                         {% endif %}
+                         {% if profile.gender %}
+                         <div>
+                             <dt><i class="fas fa-venus-mars"></i>Gender:</dt>
+                             <dd>{{ profile.get_gender_display }}</dd>
+                         </div>
+                         {% endif %}
+                     </dl>
+                </div>
+
+
+                <!-- Column 2 -->
+                <div class="profile-section"> <!-- Academic & Professional Details -->
+                    <h3><i class="fas fa-briefcase"></i>Experience & Education</h3>
+                     <dl class="profile-details">
+                        {% if profile.current_job_title or profile.company_name %}
+                        <div>
+                            <dt><i class="fas fa-briefcase"></i>Current Position:</dt>
+                            <dd>{{ profile.current_job_title|default:"N/A" }} at {{ profile.company_name|default:"N/A" }}</dd>
+                        </div>
+                        {% endif %}
+                        {% if profile.industry %}
+                        <div>
+                            <dt><i class="fas fa-industry"></i>Industry:</dt>
+                            <dd>{{ profile.industry|default:"N/A" }}</dd>
+                        </div>
+                        {% endif %}
+                     </dl>
+                </div>
+
+                {% if profile.achievements %}
+                <div class="profile-section"> <!-- Achievements Box -->
+                    <h3><i class="fas fa-trophy"></i>Achievements</h3>
+                    <p>{{ profile.achievements|linebreaksbr }}</p>
+                </div>
+                {% endif %}
+
+                <div class="profile-section"> <!-- Meta Info Box -->
+                     <h3><i class="fas fa-info-circle"></i>Profile Info</h3>
+                     <dl class="profile-details">
+                         <div>
+                            <dt><i class="fas fa-clock"></i>Last Updated:</dt>
+                            <dd>{{ profile.updated_at|date:"F j, Y, P" }}</dd>
+                        </div>
+                     </dl>
+                </div>
+
+            </div> <!-- End profile-details-content grid -->
+
+        </div> <!-- End profile-container -->
+    </main>
+
+    <!-- Standard Site Footer -->
+    <footer class="site-standard-footer">
+        &copy; {% now "Y" %} Anuj Waghmare. All rights reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Theme Toggle Logic
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            const moonIcon = themeToggleBtn ? themeToggleBtn.querySelector('.fa-moon') : null;
+            const sunIcon = themeToggleBtn ? themeToggleBtn.querySelector('.fa-sun') : null;
+
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark-theme');
+                    if (moonIcon) moonIcon.style.display = 'none';
+                    if (sunIcon) sunIcon.style.display = 'inline-block';
+                } else {
+                    body.classList.remove('dark-theme');
+                    if (moonIcon) moonIcon.style.display = 'inline-block';
+                    if (sunIcon) sunIcon.style.display = 'none';
+                }
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            applyTheme(savedTheme || 'light'); // Default to light
+
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', function() {
+                    body.classList.toggle('dark-theme');
+                    let newTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
+                    localStorage.setItem('theme', newTheme);
+                    applyTheme(newTheme);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

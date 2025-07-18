@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TKIET Alumni Portal{% endblock title %}</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'AlumniPortal/css/main_styles.css' %}">
+
+    {% block extra_head %}
+    {% endblock extra_head %}
+</head>
+<body>
+    <header class="custom-site-header">
+        <div class="nav-left">
+            <img src="{% static 'AlumniPortal/images/logo.png' %}" alt="College Logo" class="college-logo">
+            <div class="college-name">
+                <h2>TKIET Warananagar</h2>
+                <h3>Alumni Portal</h3>
+                <p>Empowering Connections, Enriching Futures</p>
+            </div>
+        </div>
+        <nav class="navigation">
+            <a href="{% url 'AlumniPortal:home' %}" {% if request.resolver_match.view_name == 'AlumniPortal:home' %}class="active"{% endif %}>Home</a>
+            <a href="{% url 'AlumniPortal:events' %}" {% if request.resolver_match.view_name == 'AlumniPortal:events' %}class="active"{% endif %}>Events</a>
+            <a href="{% url 'AlumniPortal:news' %}" {% if request.resolver_match.view_name == 'AlumniPortal:news' or request.resolver_match.view_name == 'AlumniPortal:news_detail' %}class="active"{% endif %}>News</a>
+            <a href="{% url 'AlumniPortal:alumni_assistant' %}" {% if request.resolver_match.view_name == 'AlumniPortal:alumni_assistant' %}class="active"{% endif %}>RiRuRu AI</a>
+            <a href="{% url 'AlumniPortal:about' %}" {% if request.resolver_match.view_name == 'AlumniPortal:about' %}class="active"{% endif %}>About Us</a>
+            <a href="{% url 'AlumniPortal:contact' %}" {% if request.resolver_match.view_name == 'AlumniPortal:contact' %}class="active"{% endif %}>Contact</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'AlumniPortal:view_profile' %}" class="nav-button {% if request.resolver_match.view_name == 'AlumniPortal:view_profile' or request.resolver_match.view_name == 'AlumniPortal:edit_profile' %}active{% endif %}">My Profile</a>
+                <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button {% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a>
+                <a href="{% url 'AlumniPortal:register' %}" class="nav-button {% if request.resolver_match.view_name == 'AlumniPortal:register' %}active{% endif %}">Register</a>
+            {% endif %}
+            <button id="theme-toggle" class="theme-toggle-button" title="Toggle theme">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main role="main">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {% now "Y" %} Anuj Waghmare. All Rights Reserved.</p>
+
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+        const moonIcon = themeToggleBtn.querySelector('.fa-moon');
+        const sunIcon = themeToggleBtn.querySelector('.fa-sun');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                body.classList.add('dark-theme');
+                if (moonIcon) moonIcon.style.display = 'none';
+                if (sunIcon) sunIcon.style.display = 'inline-block';
+            } else {
+                body.classList.remove('dark-theme');
+                if (moonIcon) moonIcon.style.display = 'inline-block';
+                if (sunIcon) sunIcon.style.display = 'none';
+            }
+        }
+        const savedTheme = localStorage.getItem('theme');
+        applyTheme(savedTheme || 'light');
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', function() {
+                body.classList.toggle('dark-theme');
+                let newTheme = 'light';
+                if (body.classList.contains('dark-theme')) {
+                    newTheme = 'dark';
+                }
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+        }
+    });
+    </script>
+
+    {% block extra_scripts %}
+    {% endblock extra_scripts %}
+</body>
+</html>

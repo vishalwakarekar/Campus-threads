@@ -1,0 +1,425 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title|default:"TKIET Alumni Portal" }}</title>
+    {# Link to ionicons if your style.css or script.js depends on it #}
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    {# Font Awesome for icons (needed for theme toggle) #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* CSS Variables for Theming (Keep these as they are) */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #fff;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --header-border: #dee2e6;
+            --header-link-color: #333;
+            --header-link-active-bg: #eee;
+            --header-link-active-color: #007bff;
+            --header-button-bg: #007bff;
+            --header-button-text: #fff;
+            --header-button-hover-bg: #0056b3;
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --muted-text-color: #555;
+            --border-color: #eee;
+            --footer-bg: #343a40;
+            --footer-text: #f8f9fa;
+            --shadow-color: rgba(0,0,0,0.1);
+            --card-hover-shadow-color: rgba(0,0,0,0.12);
+            --hero-text-color: #fff;
+            --hero-overlay-color: rgba(0, 0, 0, 0.55);
+            --theme-toggle-icon-color: #495057;
+            --theme-toggle-hover-bg: #e9ecef;
+            --theme-transition-duration: 0.3s;
+        }
+
+        body.dark-theme {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --card-bg: #2c2c2c;
+            --header-bg: rgba(34, 34, 34, 0.95);
+            --header-border: #444;
+            --header-link-color: #c0c0c0;
+            --header-link-active-bg: #3a3a3a;
+            --header-link-active-color: #87cefa;
+            --header-button-bg: #1e90ff;
+            --header-button-hover-bg: #4682b4;
+            --primary-color: #4dabf7;
+            --secondary-color: #868e96;
+            --muted-text-color: #a0a0a0;
+            --border-color: #444;
+            --footer-bg: #111;
+            --footer-text: #c0c0c0;
+            --shadow-color: rgba(255,255,255,0.05);
+            --card-hover-shadow-color: rgba(255,255,255,0.1);
+            --hero-overlay-color: rgba(0, 0, 0, 0.65);
+            --theme-toggle-icon-color: #c0c0c0;
+            --theme-toggle-hover-bg: #3a3a3a;
+        }
+
+        html { box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            padding: 0.8rem 2rem;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            border-bottom: 1px solid var(--header-border);
+            transition: background-color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
+        }
+        .nav-left { display: flex; align-items: center; }
+        .college-logo { height: 50px; margin-right: 15px; }
+        .college-name h2, .college-name h3, .college-name p {
+            margin: 0;
+            line-height: 1.2;
+            transition: color var(--theme-transition-duration) ease;
+        }
+        .college-name h2 { font-size: 1.3em; color: var(--header-link-active-color); }
+        .college-name h3 { font-size: 1.0em; color: var(--primary-color); }
+        .college-name p { font-size: 0.85em; color: var(--muted-text-color); }
+
+        .navigation { display: flex; align-items: center; }
+        .navigation a {
+            color: var(--header-link-color);
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+        }
+        .navigation a:hover, .navigation a.active {
+            background-color: var(--header-link-active-bg);
+            color: var(--header-link-active-color);
+        }
+        .navigation .nav-button {
+            background-color: var(--header-button-bg);
+            color: var(--header-button-text) !important;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color var(--theme-transition-duration) ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .navigation .nav-button:hover, .navigation .nav-button.active {
+            background-color: var(--header-button-hover-bg);
+            color: var(--header-button-text) !important;
+        }
+
+        .theme-toggle-button {
+            background: none; border: none; color: var(--theme-toggle-icon-color);
+            font-size: 1.2rem; padding: 8px 12px; margin-left: 15px;
+            cursor: pointer; border-radius: 4px;
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+        }
+        .theme-toggle-button:hover { background-color: var(--theme-toggle-hover-bg); }
+        .theme-toggle-button .fa-sun { display: none; }
+        body.dark-theme .theme-toggle-button .fa-sun { display: inline-block; }
+        body.dark-theme .theme-toggle-button .fa-moon { display: none; }
+
+        .hero-section {
+            background-image: linear-gradient(var(--hero-overlay-color), var(--hero-overlay-color)), url("{% static 'AlumniPortal/images/background.png' %}");
+            background-size: cover; background-position: center center; background-repeat: no-repeat;
+            background-color: #333; color: var(--hero-text-color);
+            text-align: center; padding: 80px 20px 70px 20px; min-height: 55vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            width: 100%;
+            transition: background-image var(--theme-transition-duration) ease;
+        }
+        .hero-section h1 { font-size: 2.8em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+        .hero-section p { font-size: 1.2em; margin-bottom: 30px; max-width: 700px; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); }
+        .cta-button {
+            display: inline-block; background-color: var(--primary-color);
+            color: var(--header-button-text) !important; padding: 14px 28px;
+            text-decoration: none; border-radius: 5px; font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 10px 5px; border: none;
+        }
+        .cta-button:hover {
+            background-color: var(--header-button-hover-bg);
+            color: var(--header-button-text) !important;
+            transform: translateY(-2px);
+        }
+        .cta-button.secondary { background-color: var(--secondary-color); }
+        .cta-button.secondary:hover { background-color: color-mix(in srgb, var(--secondary-color) 80%, black); }
+
+        .content-container {
+            max-width: 1100px; margin: 40px auto; padding: 0 20px;
+            flex-grow: 1; width: 100%;
+        }
+        .home-section {
+            background-color: var(--card-bg); padding: 35px; margin-bottom: 35px;
+            border-radius: 8px; box-shadow: 0 3px 8px var(--shadow-color);
+            text-align: center;
+            transition: background-color var(--theme-transition-duration) ease, box-shadow var(--theme-transition-duration) ease;
+        }
+        .home-section h2 {
+            color: var(--primary-color); margin-top: 0; margin-bottom: 25px;
+            padding-bottom: 15px; border-bottom: 2px solid var(--border-color);
+            display: inline-block;
+            transition: color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
+        }
+        .about-section p {
+            margin-bottom: 20px; font-size: 1.1em; max-width: 800px;
+            margin-left: auto; margin-right: auto; color: var(--text-color);
+            transition: color var(--theme-transition-duration) ease;
+        }
+        .about-section .cta-button { background-color: var(--secondary-color); }
+        .about-section .cta-button:hover { background-color: color-mix(in srgb, var(--secondary-color) 80%, black); }
+
+        .news-grid, .events-list { /* Combined common grid styles */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjust minmax for 3 items */
+            gap: 25px;
+            text-align: left; /* Individual items will center their content if needed */
+        }
+        .news-item, .event-item { /* Combined common item styles */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: var(--card-bg);
+            display: flex; /* Added for better control of content */
+            flex-direction: column; /* Stack image, title, button */
+            align-items: center; /* Center content horizontally */
+            padding: 15px; /* Add some padding to the item box */
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color var(--theme-transition-duration) ease, border-color var(--theme-transition-duration) ease;
+        }
+        .news-item:hover, .event-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px var(--card-hover-shadow-color);
+        }
+        .news-item img, .event-item img { /* Common image styles */
+            width: 100%;
+            height: 180px; /* Adjust as needed */
+            object-fit: cover;
+            display: block;
+            border-radius: 4px; /* Rounded corners for image */
+            margin-bottom: 15px; /* Space below image */
+        }
+        .news-item h3, .event-item h3 { /* Common title styles */
+            margin-top: 0;
+            margin-bottom: 15px; /* Space below title */
+            font-size: 1.2em;
+            color: var(--text-color);
+            text-align: center; /* Center title text */
+            transition: color var(--theme-transition-duration) ease;
+        }
+        /* Simplified button for news/event items on homepage */
+        .item-view-all-button {
+            display: inline-block;
+            background-color: var(--secondary-color); /* Or var(--primary-color) */
+            color: var(--header-button-text) !important;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            margin-top: auto; /* Pushes button to bottom if item is flex column */
+        }
+        .item-view-all-button:hover {
+            background-color: color-mix(in srgb, var(--secondary-color) 80%, black);
+        }
+
+
+        footer {
+            text-align: center; margin-top: auto; padding: 30px 20px;
+            font-size: 0.95em; color: var(--footer-text);
+            background-color: var(--footer-bg); width: 100%; flex-shrink: 0;
+            transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+        }
+
+        @media (max-width: 992px) {
+             .hero-section h1 { font-size: 2.4em; }
+             .hero-section p { font-size: 1.1em; }
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column; align-items: center; padding: 1rem;
+            }
+            .nav-left { margin-bottom: 10px; text-align: center;}
+            .navigation {
+                width: 100%; margin-top: 10px; display: flex;
+                flex-wrap: wrap; justify-content: center; align-items: center;
+            }
+            .navigation a, .navigation .theme-toggle-button { margin: 5px; }
+            .hero-section { padding: 60px 15px 50px 15px; min-height: 45vh;}
+            .hero-section h1 { font-size: 2em; }
+            .hero-section p { font-size: 1em; }
+            .home-section { padding: 25px; }
+            .news-grid, .events-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-left">
+            <img src="{% static 'AlumniPortal/images/logo.png' %}" alt="College Logo" class="college-logo">
+            <div class="college-name">
+                <h2>TKIET Warananagar</h2>
+                <h3>Alumni Portal</h3>
+                <p>Empowering Connections, Enriching Futures</p>
+            </div>
+        </div>
+        <nav class="navigation">
+            <a href="{% url 'AlumniPortal:home' %}" {% if request.resolver_match.view_name == 'AlumniPortal:home' %}class="active"{% endif %}>Home</a>
+            <a href="{% url 'AlumniPortal:events' %}" {% if request.resolver_match.view_name == 'AlumniPortal:events' %}class="active"{% endif %}>Events</a>
+            <a href="{% url 'AlumniPortal:news' %}" {% if request.resolver_match.view_name == 'AlumniPortal:news' or request.resolver_match.view_name == 'AlumniPortal:news_detail' %}class="active"{% endif %}>News</a>
+            <a href="{% url 'AlumniPortal:alumni_assistant' %}" {% if request.resolver_match.view_name == 'AlumniPortal:alumni_assistant' %}class="active"{% endif %}>RiRuRu AI</a>
+            <a href="{% url 'AlumniPortal:about' %}" {% if request.resolver_match.view_name == 'AlumniPortal:about' %}class="active"{% endif %}>About Us</a>
+            <a href="{% url 'AlumniPortal:contact' %}" {% if request.resolver_match.view_name == 'AlumniPortal:contact' %}class="active"{% endif %}>Contact</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'AlumniPortal:view_profile' %}" class="nav-button {% if request.resolver_match.view_name == 'AlumniPortal:view_profile' or request.resolver_match.view_name == 'AlumniPortal:edit_profile' %}active{% endif %}">My Profile</a>
+                <a href="{% url 'logout' %}" class="nav-button">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button {% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a>
+                <a href="{% url 'AlumniPortal:register' %}" class="nav-button {% if request.resolver_match.view_name == 'AlumniPortal:register' %}active{% endif %}">Register</a>
+            {% endif %}
+            <button id="theme-toggle" class="theme-toggle-button" title="Toggle theme">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <h1>Welcome to the TKIET Alumni Network!</h1>
+        <p>Reconnect with classmates, expand your professional network, and stay engaged with the TKIET community.</p>
+        <div>
+            {% if user.is_authenticated %}
+                 <a href="{% url 'AlumniPortal:view_profile' %}" class="cta-button">View Your Profile</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="cta-button">Login</a>
+                <a href="{% url 'AlumniPortal:register' %}" class="cta-button secondary">Register Now</a>
+            {% endif %}
+        </div>
+    </section>
+
+    <div class="content-container">
+
+        <section class="home-section about-section">
+            <h2>About the TKIET Alumni Association</h2>
+            <p>Fostering lifelong connections between TKIET Warananagar and its graduates. We aim to support alumni through networking opportunities, professional development, and celebrating shared experiences.</p>
+            <p>Get involved, share your story, and help strengthen our vibrant community.</p>
+            <a href="{% url 'AlumniPortal:about' %}" class="cta-button secondary">Learn More About Us</a>
+        </section>
+
+        <section class="home-section">
+            <h2>Latest News</h2>
+            {% if latest_news_articles %}
+                <div class="news-grid">
+                    {% for article in latest_news_articles %}
+                    <div class="news-item">
+                        {% if article.image %}
+                            <img src="{{ article.image.url }}" alt="{{ article.title|truncatechars:50 }}">
+                        {% else %}
+                            <img src="{% static 'AlumniPortal/images/news_placeholder.png' %}" alt="News placeholder">
+                        {% endif %}
+                        <h3>{{ article.title }}</h3>
+                        <a href="{% url 'AlumniPortal:news' %}" class="item-view-all-button">View News</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No recent news to display.</p>
+            {% endif %}
+            <div style="text-align: center; margin-top: 30px;"> {# Increased margin for overall button #}
+                <a href="{% url 'AlumniPortal:news' %}" class="cta-button">View All News</a>
+            </div>
+        </section>
+
+        <section class="home-section">
+            <h2>Upcoming Events</h2>
+             {% if latest_events_list %}
+                <div class="events-list">
+                    {% for event in latest_events_list %}
+                    <div class="event-item">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.title|truncatechars:50 }}">
+                        {% else %}
+                             <img src="{% static 'AlumniPortal/images/event_placeholder.png' %}" alt="Event placeholder">
+                        {% endif %}
+                        <h3>{{ event.title }}</h3>
+                        <a href="{% url 'AlumniPortal:events' %}" class="item-view-all-button">View Events</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No upcoming events to display.</p>
+            {% endif %}
+            <div style="text-align: center; margin-top: 30px;"> {# Increased margin for overall button #}
+                <a href="{% url 'AlumniPortal:events' %}" class="cta-button">View All Events</a>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        &copy; {% now "Y" %} Anuj Waghmare. All rights reserved.
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+        const moonIcon = themeToggleBtn.querySelector('.fa-moon');
+        const sunIcon = themeToggleBtn.querySelector('.fa-sun');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                body.classList.add('dark-theme');
+                if (moonIcon) moonIcon.style.display = 'none';
+                if (sunIcon) sunIcon.style.display = 'inline-block';
+            } else {
+                body.classList.remove('dark-theme');
+                if (moonIcon) moonIcon.style.display = 'inline-block';
+                if (sunIcon) sunIcon.style.display = 'none';
+            }
+        }
+        const savedTheme = localStorage.getItem('theme');
+        applyTheme(savedTheme || 'light');
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', function() {
+                body.classList.toggle('dark-theme');
+                let newTheme = 'light';
+                if (body.classList.contains('dark-theme')) {
+                    newTheme = 'dark';
+                }
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+        }
+    });
+    </script>
+</body>
+</html>

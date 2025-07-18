@@ -1,0 +1,323 @@
+/* styles.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+.slideshow-container {
+    position: relative;
+    width: 100vw;
+    height: 80vh;
+    overflow: hidden;
+    background-color: #000;
+}
+.slides {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+.slide {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    object-fit: cover;
+}
+.active {
+    opacity: 1;
+}
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+.prev { left: 15px; }
+.next { right: 15px; }
+.dots-container {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+}
+.dot {
+    width: 12px;
+    height: 12px;
+    margin: 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+}
+.dot.active {
+    background-color: #717171;
+}
+.alumni-section {
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+.alumni-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0 5%;
+}
+.section-title {
+    font-size: 36px; /* Increase title size */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333; /* Adjust color if needed */
+    text-transform: uppercase; /* Optional: Makes text uppercase */
+}
+
+.alumni {
+    background: rgb(56, 6, 17);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 400px; /* Fixed width */
+    flex: 0 0 auto;
+    margin: 10px;/* Adjust width to fit four elements with spacing */
+}
+.alumni-slider {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.alumni-track {
+    display: flex;
+    width: 200%; /* Ensure it scrolls smoothly */
+    animation: scrollAlumni 15s linear infinite;
+}
+
+.alumni img {
+    width: 100%; /* Make image take full width of the container */
+    height: 80%; /* Increase the height */
+    border-radius: 0; /* Remove circular shape */
+    object-fit: cover;
+}
+
+
+.alumni h3 {
+    margin-top: 10px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.5em;
+    font-weight: 100;
+}
+.alumni p {
+    color: #fff;
+}
+@keyframes scrollAlumni {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.department-section {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f8f9fa;
+}
+
+.department-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    background-color:rgb(129, 223, 249) ;
+    width: 100vw;
+    padding: 20px;
+    justify-content: center;
+}
+
+.department {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.department:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.department i {
+    font-size: 50px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.department p {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+.department img {
+    width: 60px; /* Adjust size as needed */
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 5px;
+
+}
+.college-info {
+    width: 100vw;
+    height: 500px;
+    background: url('images/basic.jpg') no-repeat center center/cover;
+    display: flex;
+    
+    align-items: center;
+    position: relative;
+    justify-content: center;
+    overflow: hidden;
+}
+.college-info::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(128, 128, 128, 0.7); /* gray overlay for better contrast */
+    z-index: 0;
+}
+.college-info::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('basic.png') no-repeat center center/cover;
+    filter: blur(5px); /* Blur effect */
+    z-index: -1;
+}
+
+.overlay {
+    display: flex;
+    width: 100%;
+    justify-content: space-between; /* Spreads items across the row */
+    padding: 0 10%;
+    color: white;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.info-box {
+    flex: 1;
+}
+
+.info-box h2 {
+    font-size: 36px;
+    margin: 0;
+}
+
+.info-box p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+
+.vision-mission {
+    width: 100%;
+    padding: 60px 5%;
+    background: linear-gradient(to right, #0057b7, #ffd700); /* Blue to Gold Gradient */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vision-mission .container {
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    gap: 30px;
+}
+
+.vision, .mission {
+    flex: 1;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.vision {
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 8px solid #f8614a;
+}
+
+.mission {
+    background: rgba(255, 255, 255, 0.3);
+    border-right: 8px solid #0057b7;
+}
+
+.vision h2, .mission h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.vision p, .mission ul {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.mission ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mission ul li {
+    position: relative;
+    margin: 10px 0;
+    padding-left: 25px;
+    font-size: 18px;
+}
+
+.mission ul li::before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    color: #f3999d;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.vision:hover, .mission:hover {
+    transform: scale(1.05);
+}

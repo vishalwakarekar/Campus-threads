@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    {% load static %} {# Load static tag if needed later #}
+    <style>
+        /* Basic styling for the login form */
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 90vh; }
+        .login-container { width: 100%; max-width: 400px; padding: 35px; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-bottom: 25px; }
+        form p { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: bold; color: #555; }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 4px;
+        }
+        .errorlist { color: #dc3545; list-style-type: none; padding-left: 0; margin-top: 6px; font-size: 0.9em; text-align: center; }
+        .form-actions { margin-top: 25px; }
+        button[type="submit"] { width: 100%; padding: 12px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; font-size: 1.1em; }
+        button[type="submit"]:hover { background-color: #0056b3; }
+        .links { margin-top: 20px; text-align: center; font-size: 0.9em; }
+        .links a { color: #007bff; text-decoration: none; margin: 0 5px; }
+        .links a:hover { text-decoration: underline; }
+        /* Style for non-field errors (like invalid login) */
+        .non-field-errors .errorlist {
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+         .non-field-errors .errorlist li { list-style: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login to Alumni Portal</h2>
+
+        <form method="post">
+            {% csrf_token %} {# Security token #}
+
+            {# Display non-field errors (e.g., "Invalid username or password") #}
+            {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {# Render form fields (username, password) #}
+            {{ form.as_p }}
+
+            <div class="form-actions">
+                <button type="submit">Login as Alumni</button>
+            </div>
+
+         <div class="form-actions">
+                <a class="btn btn-primary" href="admin">Login as Admin</a>
+            </div>
+
+            {# Hidden field for redirection after login #}
+            <input type="hidden" name="next" value="{{ next }}">
+
+        </form>
+
+        <div class="links">
+            {# Optional: Link to password reset page #}
+            {# <a href="{% url 'password_reset' %}">Forgot password?</a> | #}
+
+            {# Link to registration page #}
+            <a href="{% url 'AlumniPortal:register' %}">Don't have an account? Register</a>
+        </div>
+    </div>
+
+</body>
+</html>
